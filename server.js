@@ -9,10 +9,9 @@ const port = 3000;
 
 // Allow requests from any origin (you can change this if needed)
 const corsOptions = {
-  origin: '*', // Allow requests from any origin
+  origin: 'https://cli-repl.vercel.app/',
 };
 
-// Enable CORS with wildcard origin
 app.use(cors(corsOptions));
 
 // Define the destination and filename for the uploaded files
