@@ -8,11 +8,10 @@ const app = express();
 const port = 3000;
 
 // Allow requests from any origin (you can change this if needed)
-const corsOptions = {
-  origin: 'https://cli-repl.vercel.app/',
-};
 
-app.use(cors(corsOptions));
+
+app.use(cors({ origin: '*' }));
+
 
 // Define the destination and filename for the uploaded files
 const storage = multer.diskStorage({
