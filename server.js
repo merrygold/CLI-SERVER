@@ -52,7 +52,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   );
   
   res.send('File Upload');
-  res.status(200).json({ message: `File "${filename}" uploaded successfully.` });
+  res.status(200).json({ message: `File "${req.file.originalname}" uploaded successfully.` });
 });
 
 
