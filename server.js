@@ -14,10 +14,7 @@ const dotenv = require('dotenv')
 
 
 
-app.use(cors({
-  credentials: true,
-  origin: '*'
-}))
+app.use(cors())
 
 dotenv.config();
 
