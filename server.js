@@ -46,7 +46,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         ContentType: req.file.mimetype,
       })
     );
-    await res.send('File Upload');
+   res.send('File Upload');
     //  return res.status(200).json({ message: `File "${req.file.originalname}" uploaded successfully.` });
   } catch (error) {
     console.error('Error uploading file:', error);
