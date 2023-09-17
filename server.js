@@ -6,9 +6,19 @@ const port = 3000;
 const {S3Client , PutObjectCommand ,GetObjectCommand ,DeleteObjectCommand } = require('@aws-sdk/client-s3')
 const dotenv = require('dotenv')
 
+// Enable CORS for specific origins (in this case, 'https://cli-repl.vercel.app')
+const allowedOrigins = ['https://cli-repl.vercel.app'];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
 
-
-app.use(cors());
+app.use(cors(corsOptions));
 dotenv.config();
 
 // * Set up Multer with the storage
