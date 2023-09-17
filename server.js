@@ -42,7 +42,11 @@ module.exports = allowCors(handler)
 
 
 // Enable CORS for specific origins (in this case, 'https://cli-repl.vercel.app')
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 dotenv.config();
 
 // * Set up Multer with the storage
