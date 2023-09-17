@@ -3,14 +3,19 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
-
 const app = express();
 const port = 3000;
-
+const { v4: uuidv4 } = require('uuid');
+const Datastore = require('nedb');
 // Allow requests from any origin (you can change this if needed)
 
+const db = new Datastore({ filename: 'csv-file.db', autoload: true });
 
-app.use(cors({ origin: '*' }));
+const corsOptions = {
+  origin: 'https://cli-repl.vercel.app/',
+};
+
+app.use(cors());
 
 
 // Define the destination and filename for the uploaded files
@@ -26,24 +31,70 @@ const storage = multer.diskStorage({
 // Set up Multer with the storage
 const upload = multer({ storage });
 
-// Route for handling file uploads with format validation
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload-simple', upload.single('file'), (req, res) => {
   // Check if a file was uploaded successfully
   if (req.file) {
     const { originalname, mimetype } = req.file;
     // Check if the uploaded file has the CSV mimetype
     if (mimetype === 'text/csv') {
-      res.status(200).json({ message: `${originalname} has been uploaded successfully.` });
+      // Generate a unique filename using UUID
+      const uniqueFilename = uuidv4() + path.extname(originalname);
+      
+      // Move the uploaded file to the storage directory
+      const storagePath = path.join(__dirname, 'draw-chart', uniqueFilename);
+      fs.renameSync(req.file.path, storagePath);
+
+      // Create metadata for the uploaded file
+      const metadata = {
+        filename: uniqueFilename,
+        originalname: originalname,
+        filepath: storagePath,
+        uploadDate: new Date().toISOString(),
+      };
+
+      // Insert the metadata into NeDB
+      db.insert(metadata, (err, newDoc) => {
+        if (err) {
+          // Handle error
+          res.status(500).json({ message: 'Internal server error.' });
+        } else {
+          res.status(200).json({ message: `${originalname} has been uploaded successfully.` });
+        }
+      });
     } else {
       // If the mimetype is not CSV, delete the uploaded file and return an error
-      const filePath = path.join(__dirname, 'draw-chart', req.file.filename);
-      fs.unlinkSync(filePath); // Delete the file
+      fs.unlinkSync(req.file.path); // Delete the temporary file
       res.status(400).json({ message: 'Only CSV files are allowed.' });
     }
   } else {
     res.status(400).json({ message: 'No file uploaded.' });
   }
 });
+
+
+
+
+
+
+// Route for handling file uploads with format validation
+// app.post('/upload-simple', upload.single('file'), (req, res) => {
+//   // Check if a file was uploaded successfully
+//   if (req.file) {
+//     const { originalname, mimetype } = req.file;
+//     // Check if the uploaded file has the CSV mimetype
+//     if (mimetype === 'text/csv') {
+//       res.status(200).json({ message: `${originalname} has been uploaded successfully.` });
+//     } else {
+//       // If the mimetype is not CSV, delete the uploaded file and return an error
+//       const filePath = path.join(__dirname, 'draw-chart', req.file.filename);
+//       fs.unlinkSync(filePath); // Delete the file
+//       res.status(400).json({ message: 'Only CSV files are allowed.' });
+//     }
+//   } else {
+//     res.status(400).json({ message: 'No file uploaded.' });
+//   }
+// });
+
 
 // Serve uploaded files
 app.get('/draw-chart/:filename', (req, res) => {
