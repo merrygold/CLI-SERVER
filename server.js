@@ -6,19 +6,43 @@ const port = 3000;
 const {S3Client , PutObjectCommand ,GetObjectCommand ,DeleteObjectCommand } = require('@aws-sdk/client-s3')
 const dotenv = require('dotenv')
 
-// Enable CORS for specific origins (in this case, 'https://cli-repl.vercel.app')
-const allowedOrigins = ['https://cli-repl.vercel.app' , 'http://localhost:3001'];
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
 
-app.use(cors(corsOptions));
+
+
+const allowCors = fn => async (req, res) => {
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+  return await fn(req, res)
+}
+
+const handler = (req, res) => {
+  const d = new Date()
+  res.end(d.toString())
+}
+
+module.exports = allowCors(handler)
+
+
+
+
+
+
+
+
+
+// Enable CORS for specific origins (in this case, 'https://cli-repl.vercel.app')
+app.use(cors());
 dotenv.config();
 
 // * Set up Multer with the storage
@@ -218,3 +242,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+
+
