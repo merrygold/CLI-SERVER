@@ -15,7 +15,7 @@ const corsOptions = {
   origin: 'https://cli-repl.vercel.app/',
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 
 // Define the destination and filename for the uploaded files
