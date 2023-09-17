@@ -11,6 +11,17 @@ const dotenv = require('dotenv')
 
 
 // Apply the CORS middleware with your configuration
+app.use((req, res, next) => {
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
+const corsOptions = {
+  origin: 'https://cli-repl.vercel.app',
+  optionsSuccessStatus: 200, // Some legacy browsers choke on 204
+};
+
+app.use(cors(corsOptions)); // Apply the CORS middleware
 
 
 dotenv.config();
