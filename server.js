@@ -7,7 +7,7 @@ const {S3Client , PutObjectCommand ,GetObjectCommand ,DeleteObjectCommand } = re
 const dotenv = require('dotenv')
 
 // Enable CORS for specific origins (in this case, 'https://cli-repl.vercel.app')
-const allowedOrigins = ['https://cli-repl.vercel.app'];
+const allowedOrigins = ['https://cli-repl.vercel.app' , 'http://localhost:3001'];
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -40,19 +40,21 @@ const S3 = new S3Client({
 //* For Uploading the File on Cloudflare Storage
 
 app.post('/upload', upload.single('file'), async (req, res) => {
-
-
-  await S3.send(
-    new PutObjectCommand({
-      Body: req.file.buffer,
-      Bucket: 'cli-storage',
-      Key: req.file.originalname,
-      ContentType: req.file.mimetype,
-    })
-  );
-  
-  res.send('File Upload');
-  res.status(200).json({ message: `File "${req.file.originalname}" uploaded successfully.` });
+  try {
+    await S3.send(
+      new PutObjectCommand({
+        Body: req.file.buffer,
+        Bucket: 'cli-storage',
+        Key: req.file.originalname,
+        ContentType: req.file.mimetype,
+      })
+    );
+    await res.send('File Upload');
+    //  return res.status(200).json({ message: `File "${req.file.originalname}" uploaded successfully.` });
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    res.status(500).send('Internal server error');
+  }
 });
 
 
