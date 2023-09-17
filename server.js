@@ -15,8 +15,8 @@ const dotenv = require('dotenv')
 
 
 app.use(cors({
-  credentials:true,
-  origin: "https://cli-repl.vercel.app"
+  credentials: true,
+  origin: '*'
 }))
 
 dotenv.config();
