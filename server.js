@@ -36,9 +36,6 @@ const handler = (req, res) => {
 module.exports = allowCors(handler)
 
 
-
-app.use(cors())
-
 dotenv.config();
 
 // * Set up Multer with the storage
