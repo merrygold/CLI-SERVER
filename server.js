@@ -7,11 +7,8 @@ const {S3Client , PutObjectCommand ,GetObjectCommand ,DeleteObjectCommand } = re
 const dotenv = require('dotenv')
 
 
-const corsOptions = {
-  origin: 'https://cli-repl.vercel.app/',
-};
 
-app.use(cors(corsOptions));
+app.use(cors());
 dotenv.config();
 
 // * Set up Multer with the storage
