@@ -120,7 +120,7 @@ app.delete('/delete-file/:filename', async (req, res) => {
     };
 
     await S3.send(new DeleteObjectCommand(deleteParams));
-    res.status(200).json({ message: `File "${filename}" deleted successfully.` });
+    await res.status(200).json({ message: `File "${filename}" deleted successfully.` });
 
   
   } catch (error) {
