@@ -64,7 +64,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         ContentType: req.file.mimetype,
       })
     );
-    await res.send('File Upload');
+    res.send('File Upload');
     //  return res.status(200).json({ message: `File "${req.file.originalname}" uploaded successfully.` });
   } catch (error) {
     console.error('Error uploading file:', error);
@@ -120,6 +120,7 @@ app.delete('/delete-file/:filename', async (req, res) => {
     };
 
     await S3.send(new DeleteObjectCommand(deleteParams));
+    
     await res.status(200).json({ message: `File "${filename}" deleted successfully.` });
 
   
