@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
 // Set up Multer with the storage
 const upload = multer({ storage });
 
-app.post('/upload-simple', upload.single('file'), (req, res) => {
+app.post('/upload', upload.single('file'), (req, res) => {
   // Check if a file was uploaded successfully
   if (req.file) {
     const { originalname, mimetype } = req.file;
