@@ -11,9 +11,13 @@ const dotenv = require('dotenv')
 
 
 // Apply the CORS middleware with your configuration
-app.use(cors());
 
 
+
+app.use(cors({
+  credentials:true,
+  origin: "https://cli-repl.vercel.app"
+}))
 
 dotenv.config();
 
