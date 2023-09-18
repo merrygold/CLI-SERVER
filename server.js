@@ -212,6 +212,12 @@ app.get('/', (req, res) => {
 });
 
 
+app.get('/test', (req, res) => {
+  res.send('CLI backend Server is Ready.....');
+});
+
+
+
 // * Basic Server Port Check on Console
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
