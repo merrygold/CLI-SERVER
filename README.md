@@ -8,6 +8,13 @@ CLI-REPL-SERVER is a server application designed to complement the CLI REPL proj
 
 CLI-REPL-SERVER offers a file storage system that enables users to store and manage files efficiently. This functionality is essential for tasks such as uploading CSV files for chart generation in the CLI REPL tool.
 
+1. **Installation**: Clone this repository and install the necessary dependencies.
+   ```shell
+   git clone [https://github.com/merrygold/CLI-SERVER.git]
+   cd server
+   npm i 
+   node server.js
+
 ## APIs
 
 ### 1. Upload
