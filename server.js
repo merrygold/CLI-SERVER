@@ -13,7 +13,7 @@ const dotenv = require('dotenv')
 // Apply the CORS middleware with your configuration
 
 
-app.use(cors({ origin: 'https://cli-repl.vercel.app/'})); // Apply the CORS middleware
+app.use(cors({ origin: '*'})); // Apply the CORS middleware
 
 
 dotenv.config();
