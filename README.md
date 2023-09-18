@@ -1,4 +1,4 @@
-# CLI-REPL-SERVER - README
+# CLI-REPL-SERVER
 
 ## Introduction
 
