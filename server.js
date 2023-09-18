@@ -9,7 +9,7 @@ const port = 3000;
 
 // Apply the CORS middleware with your configuration
 app.use(cors()); // Apply the CORS middleware
-dotenv.config();
+
 
 //* For Local Storage
 const storage = multer.diskStorage({
@@ -26,17 +26,17 @@ const upload = multer({storage});
 
 //*? Route for handling file uploads with format validation using (local-File-Syestem)
 app.post('/upload', upload.single('file'), (req, res) => {
-  // Check if a file was uploaded successfully
   if (req.file) {
     const { originalname, mimetype } = req.file;
-    // Check if the uploaded file has the CSV mimetype
-    if (mimetype === 'text/csv') {
+    const allowedExtensions = ['.csv'];
+    const fileExtension = path.extname(originalname).toLowerCase();
+
+    if (mimetype === 'text/csv' && allowedExtensions.includes(fileExtension)) {
       res.status(200).json({ message: `${originalname} has been uploaded successfully.` });
     } else {
-      // If the mimetype is not CSV, delete the uploaded file and return an error
       const filePath = path.join(__dirname, 'draw-chart', req.file.filename);
-      fs.unlinkSync(filePath); // Delete the file
-      res.status(400).json({ message: 'Only CSV files are allowed.' });
+      fs.unlinkSync(filePath);
+      res.status(400).json({ message: 'Invalid file format. Only CSV files are allowed.' });
     }
   } else {
     res.status(400).json({ message: 'No file uploaded.' });
